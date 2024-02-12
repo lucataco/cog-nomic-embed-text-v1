@@ -35,7 +35,7 @@ class Predictor(BasePredictor):
     def predict(
         self,
         sentences: str = Input(description="Input Sentence list - Each sentence should be split by a newline"),
-    ) -> List[float]:
+    ) -> List[List[float]]:
         """Run a single prediction on the model"""
         sentences = sentences.strip().splitlines()
         encoded_input = self.tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
@@ -44,5 +44,5 @@ class Predictor(BasePredictor):
 
         embeddings = mean_pooling(model_output, encoded_input['attention_mask'])
         embeddings = F.normalize(embeddings, p=2, dim=1)
-        embeddings = embeddings.tolist()[0]
+        embeddings = embeddings.tolist()
         return embeddings
